@@ -36,7 +36,7 @@ if uploaded_file is not None:
         
         # Get model prediction
         prediction = model.predict(img_array)
-        predicted_class = 1 if prediction[0][0] > 0.5 else 0
+        predicted_class = 0 if prediction[0][0] > 0.5 else 1
         
         # Optional: Threshold-based rejection (if confidence is too low, classify as "Neither")
         confidence = prediction[0][0]
