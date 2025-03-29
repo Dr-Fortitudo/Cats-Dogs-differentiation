@@ -40,9 +40,9 @@ if uploaded_file is not None:
         
         # Optional: Threshold-based rejection (if confidence is too low, classify as "Neither")
         confidence = prediction[0][0]
-            if confidence < 0.4:
+            if confidence < 0.1:
                 predicted_class = 0  # Cat
-            elif confidence > 0.6:
+            elif confidence > 0.9:
                 predicted_class = 1  # Dog
             else:
                 predicted_class = 2  # Not a Cat nor Dog
