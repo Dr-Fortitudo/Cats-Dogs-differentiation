@@ -14,8 +14,9 @@ CLASS_LABELS = {0: "Cat", 1: "Dog", 2: "Not a Cat nor Dog"}
 
 # Function to preprocess image
 def preprocess_image(image):
+    image = image.convert("RGB")  # Ensure 3-channel RGB
     image = image.resize((128, 128))  # Resize to match model input
-    img_array = np.array(image) / 255.0  # Normalize pixel values
+    img_array = np.array(image, dtype=np.float32) / 255.0  # Normalize pixel values
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     return img_array
 
@@ -27,18 +28,21 @@ uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+    st.image(image, caption="Uploaded Image", use_container_width=True)  # Fixed deprecation warning
     
-    # Preprocess the image
-    img_array = preprocess_image(image)
-    
-    # Get model prediction
-    prediction = model.predict(img_array)
-    predicted_class = 1 if prediction[0][0] > 0.5 else 0
-    
-    # Optional: Threshold-based rejection (if confidence is too low, classify as "Neither")
-    confidence = prediction[0][0]
-    if 0.4 < confidence < 0.6:
-        predicted_class = 2  # Not a cat nor dog
-    
-    st.write(f"Prediction: **{CLASS_LABELS[predicted_class]}**")
+    try:
+        # Preprocess the image
+        img_array = preprocess_image(image)
+        
+        # Get model prediction
+        prediction = model.predict(img_array)
+        predicted_class = 1 if prediction[0][0] > 0.5 else 0
+        
+        # Optional: Threshold-based rejection (if confidence is too low, classify as "Neither")
+        confidence = prediction[0][0]
+        if 0.4 < confidence < 0.6:
+            predicted_class = 2  # Not a cat nor dog
+        
+        st.write(f"Prediction: **{CLASS_LABELS[predicted_class]}**")
+    except Exception as e:
+        st.error(f"Error during prediction: {str(e)}")
