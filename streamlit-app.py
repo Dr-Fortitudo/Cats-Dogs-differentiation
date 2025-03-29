@@ -15,7 +15,7 @@ CLASS_LABELS = {0: "Cat", 1: "Dog", 2: "Not a Cat nor Dog"}
 # Function to preprocess image
 def preprocess_image(image):
     image = image.convert("RGB")  # Ensure 3-channel RGB
-    image = image.resize((128, 128))  # Resize to match model input
+    image = image.resize((150, 150))  # Fixed size to match model input (150x150)
     img_array = np.array(image, dtype=np.float32) / 255.0  # Normalize pixel values
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     return img_array
