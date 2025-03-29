@@ -40,8 +40,13 @@ if uploaded_file is not None:
         
         # Optional: Threshold-based rejection (if confidence is too low, classify as "Neither")
         confidence = prediction[0][0]
-        if 0.1 < confidence < 0.9:
-            predicted_class = 2  # Not a cat nor dog
+            if confidence < 0.4:
+                predicted_class = 0  # Cat
+            elif confidence > 0.6:
+                predicted_class = 1  # Dog
+            else:
+                predicted_class = 2  # Not a Cat nor Dog
+
         
         st.write(f"Prediction: **{CLASS_LABELS[predicted_class]}**")
     except Exception as e:
